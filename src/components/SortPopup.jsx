@@ -1,8 +1,38 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function SortPopup() {
+
+    const items = ["popularity", "price", "alphabetical"];
+
+    const sortRef = useRef();
+
+    const [visiblePopup, setVisiblePopup] = useState(false);
+    const [activeItem, setActiveItem] = useState(0);
+
+    const activeLabel = items[activeItem];
+
+    useEffect(() => { document.body.addEventListener('click', handleOutsideClick); }, []);
+
+    const handleOutsideClick = (e) => {
+        if (!e.composedPath().includes(sortRef.current)) {
+            setVisiblePopup(false);
+        }
+    }
+
+    const toggleVisiblePopup = () => {
+        setVisiblePopup(!visiblePopup);
+    };
+
+    const onSelectItem = (index) => {
+        setActiveItem(index);
+        setVisiblePopup(false);
+
+    };
+
+    const sortItems = createSortItems(items, activeItem, onSelectItem);
+
     return (
-        <div className="sort">
+        <div ref={sortRef} className="sort">
             <div className="sort__label">
                 <svg
                     width="10"
@@ -16,16 +46,24 @@ export default function SortPopup() {
                         fill="#2C2C2C"
                     />
                 </svg>
-                <b>Сортировка по:</b>
-                <span>популярности</span>
+                <b>Sort by:</b>
+                <span onClick={toggleVisiblePopup}>{activeLabel}</span>
             </div>
-            <div className="sort__popup">
-                <ul>
-                    <li className="active">популярности</li>
-                    <li>цене</li>
-                    <li>алфавиту</li>
-                </ul>
-            </div>
+            {visiblePopup &&
+                <div className="sort__popup">
+                    <ul>
+                        {sortItems}
+                    </ul>
+                </div>
+            }
         </div>
     )
 }
+
+const createSortItems = (items, selectedIndex, onClickHandler) => {
+    return items.map((name, index) =>
+        <li className={selectedIndex === index ? 'active' : ''}
+            onClick={() => onClickHandler(index)}
+            key={`${name}_${index}`}>{name}</li>
+    );
+};

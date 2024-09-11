@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 
-export default function Categories({ classNames, items }) {
+export default function Categories({ classNames }) {
+
+    const items = ["vegetables", "fruits", "nuts", "spices"];
 
     const [activeItem, setActiveItem] = useState(null);
 

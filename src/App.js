@@ -9,7 +9,7 @@ export default function App() {
       <div className="content">
         <div className="container">
           <div className="content__top">
-            <Categories classNames="categories" items={["vegetables", "fruits", "nuts", "spices"]} />
+            <Categories classNames="categories" />
             <SortPopup />
           </div>
           <h2 className="content__title">Все пиццы</h2>
