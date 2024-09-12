@@ -20,7 +20,7 @@ export default function SortPopup() {
     }
 
     const toggleVisiblePopup = () => {
-        setVisiblePopup(!visiblePopup);
+        setVisiblePopup(visiblePopup => !visiblePopup);
     };
 
     const onSelectItem = (index) => {
@@ -34,7 +34,7 @@ export default function SortPopup() {
     return (
         <div ref={sortRef} className="sort">
             <div className="sort__label">
-                <svg
+                <svg className={visiblePopup ? 'rotated' : ''}
                     width="10"
                     height="6"
                     viewBox="0 0 10 6"
