@@ -1,28 +1,35 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCategory } from '../redux/reducers/categoryFilter';
 
 export default function Categories({ classNames }) {
 
-    const items = ["vegetables", "fruits", "nuts", "spices"];
+    const activeItem = useSelector(({ categorySlice }) => categorySlice.activeCategory);
 
-    const [activeItem, setActiveItem] = useState(null);
+    const dispatch = useDispatch();
 
     const onSelectCategory = (index) => {
-        setActiveItem(index);
+        dispatch(selectCategory(index))
     };
 
-    const menuItems = generateMenuItems(items, onSelectCategory, activeItem);
+    const menuItems = generateMenuItems(activeItem, onSelectCategory);
+
+    const captionAll = 'all';
 
     return (
         <div className={classNames}>
             <ul>
-                <li className={activeItem === null ? 'active' : ''} onClick={() => onSelectCategory(null)}>all</li>
+                <li className={activeItem === null ? 'active' : ''} onClick={() => onSelectCategory(null)}>{captionAll}</li>
                 {menuItems}
             </ul>
         </div>
     )
 }
 
-function generateMenuItems(items, onClickHandler, activeItem) {
+function generateMenuItems(activeItem, onClickHandler) {
+
+    const items = ["vegetables", "fruits", "nuts", "spices"];
+
     return items.map((name, index) =>
         <li className={activeItem === index ? 'active' : ''}
             onClick={() => onClickHandler(index)}

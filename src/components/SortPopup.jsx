@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { changeOrder } from '../redux/reducers/sortOrderSlice';
 
 export default function SortPopup() {
 
-    const items = ["popularity", "price", "alphabetical"];
+    const dispatch = useDispatch();
+    const activeItem = useSelector(({ sortOrderSlice }) => sortOrderSlice.activeItem);
 
     const sortRef = useRef();
 
-    const [visiblePopup, setVisiblePopup] = useState(false);
-    const [activeItem, setActiveItem] = useState(0);
+    const [visiblePopup, setVisiblePopup] = React.useState(false);
 
+    const items = ["popularity", "price", "alphabetical"];
     const activeLabel = items[activeItem];
 
     useEffect(() => { document.body.addEventListener('click', handleOutsideClick); }, []);
@@ -24,9 +27,8 @@ export default function SortPopup() {
     };
 
     const onSelectItem = (index) => {
-        setActiveItem(index);
+        dispatch(changeOrder(index));
         setVisiblePopup(false);
-
     };
 
     const sortItems = createSortItems(items, activeItem, onSelectItem);
@@ -61,6 +63,7 @@ export default function SortPopup() {
 }
 
 const createSortItems = (items, selectedIndex, onClickHandler) => {
+
     return items.map((name, index) =>
         <li className={selectedIndex === index ? 'active' : ''}
             onClick={() => onClickHandler(index)}
